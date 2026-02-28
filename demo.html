@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEWCON | Pioneering Engineering Solutions Qatar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #ef4444;
+            --accent-glow: rgba(239, 68, 68, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--primary);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #991b1b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(239, 68, 68, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(239, 68, 68, 0.1);
+        }
+
+        .btn-premium {
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            box-shadow: 0 10px 20px -5px var(--accent-glow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px var(--accent-glow);
+            filter: brightness(1.1);
+        }
+
+        .btn-premium::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+            transform: translate(-100%, -100%);
+            transition: transform 0.6s ease-out;
+        }
+
+        .btn-premium:hover::after {
+            transform: translate(0, 0);
+        }
+
+        .hero-mesh {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(239, 68, 68, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(37, 99, 235, 0.1) 0%, transparent 50%);
+            filter: blur(80px);
+            z-index: 1;
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), #fca5a5);
+            z-index: 100;
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .project-img-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--primary) 0%, transparent 100%);
+            opacity: 0.6;
+            transition: opacity 0.4s ease;
+        }
+
+        .group:hover .project-img-wrapper::after {
+            opacity: 0.85;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        /* Initial hide to prevent layout flicker */
+        [data-animate] {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .reveal-delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .reveal-delay-2 {
+            transition-delay: 0.2s;
+        }
+
+        .reveal-delay-3 {
+            transition-delay: 0.3s;
+        }
+    </style>
+</head>
+
+<body class="selection:bg-red-500/30">
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 py-6 px-6 lg:px-12">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="#home" class="flex items-center gap-3 group">
+                <div
+                    class="relative w-12 h-12 overflow-hidden rounded-xl bg-white/5 flex items-center justify-center glass-card border-white/20">
+                    <img src="logo.png" alt="NEWCON Logo"
+                        class="w-10 h-10 object-contain group-hover:scale-110 transition-transform">
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-extrabold tracking-tighter text-white">NEWCON</span>
+                    <span class="text-[10px] uppercase tracking-[0.3em] text-red-500 font-bold">Engineering</span>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center space-x-10">
+                <div class="flex items-center space-x-8">
+                    <a href="#home"
+                        class="nav-link text-sm font-semibold tracking-wide text-slate-300 hover:text-white transition-colors">HOME</a>
+                    <a href="#about"
+                        class="nav-link text-sm font-semibold tracking-wide text-slate-300 hover:text-white transition-colors">ABOUT</a>
+                    <a href="#services"
+                        class="nav-link text-sm font-semibold tracking-wide text-slate-300 hover:text-white transition-colors">SERVICES</a>
+                    <a href="#projects"
+                        class="nav-link text-sm font-semibold tracking-wide text-slate-300 hover:text-white transition-colors">PROJECTS</a>
+                </div>
+                <a href="#contact"
+                    class="btn-premium px-8 py-3 rounded-full text-sm font-extrabold tracking-widest text-white uppercase">
+                    Get in Touch
+                </a>
+            </div>
+
+            <!-- Mobile Toggle -->
+            <button id="mobileTrigger"
+                class="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 focus:outline-none z-50">
+                <span class="w-6 h-0.5 bg-white transition-all duration-300 origin-center"></span>
+                <span class="w-6 h-0.5 bg-white transition-all duration-300"></span>
+                <span class="w-6 h-0.5 bg-white transition-all duration-300"></span>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobileMenu"
+            class="fixed inset-0 bg-slate-950/95 backdrop-blur-2xl translate-x-full transition-transform duration-500 ease-in-out md:hidden flex flex-col items-center justify-center space-y-8">
+            <a href="#home"
+                class="text-4xl font-extrabold text-white tracking-tighter hover:text-red-500 transition-colors">HOME</a>
+            <a href="#about"
+                class="text-4xl font-extrabold text-white tracking-tighter hover:text-red-500 transition-colors">ABOUT</a>
+            <a href="#services"
+                class="text-4xl font-extrabold text-white tracking-tighter hover:text-red-500 transition-colors">SERVICES</a>
+            <a href="#projects"
+                class="text-4xl font-extrabold text-white tracking-tighter hover:text-red-500 transition-colors">PROJECTS</a>
+            <a href="#contact"
+                class="btn-premium px-10 py-5 rounded-full text-lg font-bold text-white tracking-widest uppercase mt-4">
+                CONTACT US
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="hero_bg.png" alt="Engineering Background"
+                class="w-full h-full object-cover scale-110 parallax-bg opacity-40">
+            <div class="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/80 to-slate-950"></div>
+        </div>
+
+        <div class="hero-mesh"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-6 text-center">
+            <div
+                class="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-xl animate-pulse">
+                <div class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]"></div>
+                <span class="text-[12px] font-extrabold tracking-[0.2em] text-slate-300 uppercase">Engineering
+                    Excellence in Qatar Since 2012</span>
+            </div>
+
+            <h1 data-animate="hero"
+                class="hero-title text-4xl md:text-7xl lg:text-8xl font-black text-white leading-[0.95] tracking-tighter mb-6 md:mb-8 italic">
+                CRAFTING THE<br>
+                <span class="text-gradient not-italic">FUTURE OF</span><br>
+                ENERGY.
+            </h1>
+
+            <p data-animate="hero"
+                class="hero-sub text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-10 md:mb-12 font-medium leading-relaxed">
+                Precision engineering and infrastructure solutions tailored for the evolving needs of Qatar’s critical
+                sectors.
+            </p>
+
+            <div data-animate="hero"
+                class="hero-btns flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center">
+                <a href="#services"
+                    class="btn-premium px-8 md:px-10 py-4 md:py-5 rounded-full text-base md:text-lg font-black tracking-widest text-white uppercase group w-full sm:w-auto">
+                    Our Services
+                    <svg class="w-5 h-5 inline-block ml-2 group-hover:translate-x-1 transition-transform" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </a>
+                <a href="#contact"
+                    class="px-8 md:px-10 py-4 md:py-5 rounded-full text-base md:text-lg font-black tracking-widest text-white border-2 border-white/20 hover:border-red-500/50 hover:bg-white/5 transition-all uppercase w-full sm:w-auto">
+                    Inquire Now
+                </a>
+            </div>
+
+
+        </div>
+
+        <!-- Scroll Badge -->
+        <div class="absolute bottom-6 inset-x-0 mx-auto flex flex-col items-center animate-bounce z-20">
+            <span class="text-[10px] uppercase tracking-[0.3em] font-black text-slate-500 mb-2">SCROLL</span>
+            <div class="w-px h-12 bg-gradient-to-b from-red-500 to-transparent"></div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="relative py-20 md:py-32 overflow-hidden">
+        <div class="absolute top-0 right-0 w-1/3 h-2/3 bg-red-600/5 blur-[120px] rounded-full"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 md:gap-20 items-center">
+                <div class="reveal-up">
+                    <div
+                        class="inline-block px-4 py-1 rounded-sm bg-red-500/10 border-l-4 border-red-500 text-red-500 text-[10px] font-black uppercase tracking-[0.3em] mb-6">
+                        LEGACY OF PRECISION
+                    </div>
+                    <h2 class="text-4xl md:text-7xl font-bold text-white tracking-tighter leading-none mb-6 md:mb-8">
+                        ENGINEERING THE <br><span class="text-gradient">QATAR VISION.</span>
+                    </h2>
+                    <p class="text-lg md:text-xl text-slate-400 mb-8 leading-relaxed font-medium">
+                        NEWCON is a premier Qatar-based engineering firm powered by a decade of elite technical
+                        expertise. We don’t just build; we engineer stability.
+                    </p>
+                    <div class="space-y-6 mb-12">
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-extrabold text-white">ISO 9001:2015 Certified</h4>
+                                <p class="text-slate-400 text-sm">Meeting uncompromising international quality
+                                    benchmarks.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-extrabold text-white">Advanced Technology Native</h4>
+                                <p class="text-slate-400 text-sm">Utilizing the latest BIM and automation in
+                                    infrastructure.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#contact"
+                        class="inline-flex items-center text-sm font-black tracking-widest text-white uppercase group">
+                        Learn our methodology
+                        <svg class="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform text-red-500"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="relative reveal-up reveal-delay-2">
+                    <div
+                        class="glass-card p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border-white/5 relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-br from-red-600/10 to-transparent"></div>
+                        <div class="relative z-10">
+                            <h3 class="text-3xl font-black text-white mb-8 italic tracking-tighter">OUR PHILOSOPHY</h3>
+                            <div class="space-y-8">
+                                <div
+                                    class="p-6 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
+                                    <div class="text-red-500 text-xs font-bold uppercase mb-2 tracking-widest">VISION
+                                    </div>
+                                    <p class="text-slate-300 font-medium">To be the most reliable engineering partner in
+                                        the GCC, recognized for pioneering technical excellence and zero-failure
+                                        execution.</p>
+                                </div>
+                                <div
+                                    class="p-6 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
+                                    <div class="text-red-500 text-xs font-bold uppercase mb-2 tracking-widest">
+                                        COMMITMENT</div>
+                                    <p class="text-slate-300 font-medium">We prioritize human safety and operational
+                                        integrity over everything else. Every cable laid and every substation built is a
+                                        testament to this.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Abstract Shape -->
+                    <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-red-600/20 blur-3xl animate-pulse"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 md:py-32 bg-slate-900/50 backdrop-blur-3xl">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20">
+                <div class="reveal-up">
+                    <div class="text-red-500 text-[10px] font-black uppercase tracking-[0.4em] mb-4">CAPABILITIES</div>
+                    <h2 class="text-4xl md:text-7xl font-bold text-white tracking-tighter">CORE<br><span
+                            class="text-gradient">DOMAINS.</span></h2>
+                </div>
+                <p class="max-w-md text-slate-400 font-medium mt-6 md:mt-0 reveal-up reveal-delay-1">
+                    Integrated EPC (Engineering, Procurement, and Construction) solutions designed for Qatar's
+                    high-stakes industrial landscape.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service Item -->
+                <div class="glass-card p-10 rounded-[2.5rem] group reveal-up">
+                    <div
+                        class="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-red-500 transition-all duration-500">
+                        <svg class="w-8 h-8 text-red-500 group-hover:text-white transition-colors" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-4 tracking-tight">Civil & Infrastructure</h3>
+                    <p class="text-slate-400 font-medium mb-8">Heavy-duty construction and foundational infrastructure
+                        for industrial and energy facilities.</p>
+                    <ul class="text-sm font-bold text-slate-500 space-y-2 uppercase tracking-widest">
+                        <li>• EARTH WORKS</li>
+                        <li>• STRUCTURAL CONCRETE</li>
+                        <li>• UTILITY TUNNELS</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-10 rounded-[2.5rem] group reveal-up reveal-delay-1">
+                    <div
+                        class="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-red-500 transition-all duration-500">
+                        <svg class="w-8 h-8 text-red-500 group-hover:text-white transition-colors" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-4 tracking-tight">HV Substations</h3>
+                    <p class="text-slate-400 font-medium mb-8">End-to-end GIS and AIS substation solutions including
+                        design, testing, and commissioning.</p>
+                    <ul class="text-sm font-bold text-slate-500 space-y-2 uppercase tracking-widest">
+                        <li>• 11KV/33KV SYSTEMS</li>
+                        <li>• GIS INSTALLATION</li>
+                        <li>• BAY UPGRADES</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-10 rounded-[2.5rem] group reveal-up reveal-delay-2">
+                    <div
+                        class="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-red-500 transition-all duration-500">
+                        <svg class="w-8 h-8 text-red-500 group-hover:text-white transition-colors" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-4 tracking-tight">Underground Networks</h3>
+                    <p class="text-slate-400 font-medium mb-8">Specialized cable management and power distribution
+                        networks for transmission projects.</p>
+                    <ul class="text-sm font-bold text-slate-500 space-y-2 uppercase tracking-widest">
+                        <li>• CABLE JOINTING</li>
+                        <li>• ROUTE SURVEYS</li>
+                        <li>• TERMINATIONS</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-10 rounded-[2.5rem] group reveal-up">
+                    <div
+                        class="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-red-500 transition-all duration-500">
+                        <svg class="w-8 h-8 text-red-500 group-hover:text-white transition-colors" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-4 tracking-tight">MEP Systems</h3>
+                    <p class="text-slate-400 font-medium mb-8">Integrated Mechanical, Electrical, and Plumbing for
+                        high-performance buildings.</p>
+                    <ul class="text-sm font-bold text-slate-500 space-y-2 uppercase tracking-widest">
+                        <li>• HVAC DESIGN</li>
+                        <li>• FIRE PROTECTION</li>
+                        <li>• ELV SYSTEMS</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-10 rounded-[2.5rem] group reveal-up reveal-delay-1">
+                    <div
+                        class="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-red-500 transition-all duration-500">
+                        <svg class="w-8 h-8 text-red-500 group-hover:text-white transition-colors" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-4 tracking-tight">Transformers</h3>
+                    <p class="text-slate-400 font-medium mb-8">Supply and maintenance of industrial-grade transformers
+                        and LV/MV switchgears.</p>
+                    <ul class="text-sm font-bold text-slate-500 space-y-2 uppercase tracking-widest">
+                        <li>• PERIODIC TESTING</li>
+                        <li>• OIL ANALYSIS</li>
+                        <li>• RETROFITTING</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-10 rounded-[2.5rem] group reveal-up reveal-delay-2">
+                    <div
+                        class="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-red-500 transition-all duration-500">
+                        <svg class="w-8 h-8 text-red-500 group-hover:text-white transition-colors" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-4 tracking-tight">Smart Grid</h3>
+                    <p class="text-slate-400 font-medium mb-8">Advanced automation and energy management systems for the
+                        next decade.</p>
+                    <ul class="text-sm font-bold text-slate-500 space-y-2 uppercase tracking-widest">
+                        <li>• SCADA INTEGRATION</li>
+                        <li>• SMART METERING</li>
+                        <li>• EMS SOLUTIONS</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 md:py-32 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12 md:mb-24 reveal-up">
+                <div class="text-red-500 text-[10px] font-black uppercase tracking-[0.4em] mb-4">SHOWCASE</div>
+                <h2 class="text-4xl md:text-8xl font-black text-white tracking-tighter">LANDMARK<br><span
+                        class="text-gradient">EXECUTION.</span></h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project Item -->
+                <div class="group relative aspect-[4/5] overflow-hidden rounded-[3rem] reveal-up">
+                    <img src="project_substation.png" alt="Substation Project"
+                        class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent p-10 flex flex-col justify-end">
+                        <div class="text-red-500 text-[10px] font-bold uppercase tracking-widest mb-2">ENERGY SECTOR
+                        </div>
+                        <h3 class="text-3xl font-black text-white mb-2 leading-none">11KV Substation Cluster</h3>
+                        <p
+                            class="text-slate-300 text-sm font-medium opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                            Complete greenfield construction, installation, and multi-stage testing protocol.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="group relative aspect-[4/5] overflow-hidden rounded-[3rem] reveal-up reveal-delay-1">
+                    <img src="project_cables.png" alt="Cable Network"
+                        class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent p-10 flex flex-col justify-end">
+                        <div class="text-red-500 text-[10px] font-bold uppercase tracking-widest mb-2">INFRASTRUCTURE
+                        </div>
+                        <h3 class="text-3xl font-black text-white mb-2 leading-none">Underground HV Network</h3>
+                        <p
+                            class="text-slate-300 text-sm font-medium opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                            Laying and jointing of 33KV cables across major industrial corridors.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="group relative aspect-[4/5] overflow-hidden rounded-[3rem] reveal-up reveal-delay-2">
+                    <img src="project_smartcity.png" alt="Smart City Systems"
+                        class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent p-6 md:p-10 flex flex-col justify-end">
+                        <div class="text-red-500 text-[10px] font-bold uppercase tracking-widest mb-2">TECHNOLOGY</div>
+                        <h3 class="text-2xl md:text-3xl font-black text-white mb-2 leading-none">Smart Utility Control
+                        </h3>
+                        <p
+                            class="text-slate-300 text-sm font-medium opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                            Integration of advanced SCADA systems for real-time monitoring.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why NEWCON -->
+    <section class="py-20 md:py-32 bg-slate-950">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-12 md:gap-20 items-center">
+                <div class="reveal-up">
+                    <h2 class="text-4xl md:text-7xl font-bold text-white tracking-tighter mb-8 md:mb-10 leading-none">
+                        WHY PARTNER <br>WITH <span class="text-gradient">NEWCON?</span>
+                    </h2>
+                    <div class="grid sm:grid-cols-2 gap-8 md:gap-10">
+                        <div class="reveal-up">
+                            <div class="text-3xl font-black text-white italic mb-2 tracking-tighter">01.</div>
+                            <h4 class="text-lg font-bold text-white mb-2 uppercase tracking-wide">Elite Engineering</h4>
+                            <p class="text-slate-400 text-sm">Managed by veterans with decade-plus field experience.</p>
+                        </div>
+                        <div class="reveal-up reveal-delay-1">
+                            <div class="text-3xl font-black text-white italic mb-2 tracking-tighter">02.</div>
+                            <h4 class="text-lg font-bold text-white mb-2 uppercase tracking-wide">Quality First</h4>
+                            <p class="text-slate-400 text-sm">Zero-compromise on materials and execution standards.</p>
+                        </div>
+                        <div class="reveal-up reveal-delay-2">
+                            <div class="text-3xl font-black text-white italic mb-2 tracking-tighter">03.</div>
+                            <h4 class="text-lg font-bold text-white mb-2 uppercase tracking-wide">On-Time Native</h4>
+                            <p class="text-slate-400 text-sm">Structured scheduling ensuring deadline compliance.</p>
+                        </div>
+                        <div class="reveal-up reveal-delay-3">
+                            <div class="text-3xl font-black text-white italic mb-2 tracking-tighter">04.</div>
+                            <h4 class="text-lg font-bold text-white mb-2 uppercase tracking-wide">Active Support</h4>
+                            <p class="text-slate-400 text-sm">24/7 post-commissioning maintenance and monitoring.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal-up reveal-delay-2 relative">
+                    <div
+                        class="aspect-square glass-card rounded-full flex flex-col items-center justify-center text-center p-8 md:p-12 border-red-500/20">
+                        <div class="text-red-500 text-xs font-black uppercase tracking-[0.4em] mb-4 md:mb-6">OUR
+                            COMMITMENT
+                        </div>
+                        <p class="text-xl md:text-3xl font-black text-white italic tracking-tighter leading-tight">
+                            "WE DO NOT JUST <br>EXECUTE PROJECTS. <br>WE ENGINEER <br>RELIABILITY."
+                        </p>
+                        <div class="w-16 md:w-20 h-px bg-red-500 mt-8 md:mt-10"></div>
+                    </div>
+                    <!-- Decor -->
+                    <div class="absolute inset-0 bg-red-600/10 blur-[100px] -z-10 rounded-full animate-pulse"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 md:py-32">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="glass-card rounded-[2rem] md:rounded-[4rem] overflow-hidden border-white/5 shadow-2xl">
+                <div class="grid lg:grid-cols-12">
+                    <div
+                        class="lg:col-span-5 bg-gradient-to-br from-red-600 to-red-900 p-8 md:p-20 text-white relative h-full">
+                        <div class="absolute inset-0 overflow-hidden opacity-10 pointer-events-none">
+                            <svg class="w-full h-full scale-150 transform rotate-12" fill="currentColor"
+                                viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="40" stroke="white" stroke-width="2" fill="none" />
+                                <circle cx="50" cy="50" r="30" stroke="white" stroke-width="1" fill="none" />
+                            </svg>
+                        </div>
+                        <div class="relative z-10">
+                            <h2
+                                class="text-3xl md:text-5xl font-black tracking-tighter leading-none mb-8 md:mb-10 uppercase">
+                                LET'S START THE
+                                CONVERSATION.</h2>
+                            <p class="text-red-100 text-base md:text-lg font-medium mb-10 md:mb-12">Connect with our
+                                specialized engineering
+                                team for your next major project inquiry.</p>
+
+                            <div class="space-y-10">
+                                <div class="flex items-start gap-6">
+                                    <div
+                                        class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-xs uppercase tracking-[0.2em] mb-1">HQ ADDRESS</h4>
+                                        <p class="text-lg font-bold">Barwa Commercial Avenue, Safwa<br>Building #16, 1st
+                                            Floor, Qatar</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-6">
+                                    <div
+                                        class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-xs uppercase tracking-[0.2em] mb-1">INQUIRIES</h4>
+                                        <p class="text-xl font-bold">info@newcon.qa</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-7 bg-slate-900/40 p-8 md:p-20">
+                        <form id="contactForm" class="space-y-8">
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div class="space-y-2">
+                                    <label class="text-xs font-black uppercase tracking-[0.3em] text-slate-500">FULL
+                                        NAME</label>
+                                    <input type="text"
+                                        class="w-full bg-slate-800/20 border-b border-slate-700 p-4 focus:border-red-500 focus:outline-none transition-colors text-white font-medium"
+                                        placeholder="E.g. Jassim Al-Thani">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-xs font-black uppercase tracking-[0.3em] text-slate-500">EMAIL
+                                        ADDRESS</label>
+                                    <input type="email"
+                                        class="w-full bg-slate-800/20 border-b border-slate-700 p-4 focus:border-red-500 focus:outline-none transition-colors text-white font-medium"
+                                        placeholder="email@company.com">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-black uppercase tracking-[0.3em] text-slate-500">SERVICE
+                                    CATEGORY</label>
+                                <select
+                                    class="w-full bg-slate-800/20 border-b border-slate-700 p-4 focus:border-red-500 focus:outline-none transition-colors text-white font-bold appearance-none">
+                                    <option value="infrastructure">Infrastructure & Civil</option>
+                                    <option value="substations">HV Substations</option>
+                                    <option value="mep">MEP Solutions</option>
+                                    <option value="other">Other Inquiry</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-black uppercase tracking-[0.3em] text-slate-500">PROJECT
+                                    BRIEF</label>
+                                <textarea rows="5"
+                                    class="w-full bg-slate-800/20 border-b border-slate-700 p-4 focus:border-red-500 focus:outline-none transition-colors text-white font-medium resize-none"
+                                    placeholder="Describe your project requirements..."></textarea>
+                            </div>
+                            <button type="submit"
+                                class="btn-premium w-full py-6 rounded-2xl text-lg font-black tracking-[0.3em] text-white uppercase mt-10">
+                                Submit Formal Inquiry
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 md:py-20 bg-slate-950 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-12 mb-20">
+                <div class="flex flex-col items-center md:items-start">
+                    <div class="flex items-center gap-4 mb-4 group cursor-pointer">
+                        <img src="logo.png" alt="NEWCON"
+                            class="w-10 h-10 object-contain group-hover:rotate-[360deg] transition-transform duration-1000">
+                        <span class="text-3xl font-black text-white italic tracking-tighter">NEWCON.</span>
+                    </div>
+                    <p class="max-w-xs text-slate-500 text-sm font-medium text-center md:text-left">
+                        Precision-driven Qatar engineering solutions since 2012. ISO certified performance.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-12 lg:gap-24">
+                    <div class="space-y-6">
+                        <h4 class="text-red-500 text-xs font-black uppercase tracking-widest">LINKS</h4>
+                        <ul class="space-y-4 text-slate-400 font-bold text-sm uppercase">
+                            <li><a href="#home" class="hover:text-white transition-colors tracking-widest">Home</a></li>
+                            <li><a href="#about" class="hover:text-white transition-colors tracking-widest">About</a>
+                            </li>
+                            <li><a href="#projects" class="hover:text-white transition-colors tracking-widest">Work</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="space-y-6">
+                        <h4 class="text-red-500 text-xs font-black uppercase tracking-widest">SOCIAL</h4>
+                        <ul class="space-y-4 text-slate-400 font-bold text-sm uppercase">
+                            <li><a href="#" class="hover:text-white transition-colors tracking-widest">LinkedIn</a></li>
+                            <li><a href="#" class="hover:text-white transition-colors tracking-widest">Instagram</a>
+                            </li>
+                            <li><a href="#" class="hover:text-white transition-colors tracking-widest">X</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-white/5 gap-6">
+                <p class="text-slate-600 text-[10px] font-black uppercase tracking-[0.2em]">&copy; 2024 NEWCON QATAR.
+                    ALL RIGHTS RESERVED.</p>
+                <div class="flex items-center gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">
+                    <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms</a>
+                    <a href="#" class="hover:text-white transition-colors">Compliance</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Lenis Smooth Scroll
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+        })
+
+        function raf(time) {
+            lenis.raf(time)
+            requestAnimationFrame(raf)
+        }
+        requestAnimationFrame(raf)
+
+        // Custom Scroll Progress
+        const scrollProgress = document.getElementById('scrollProgress');
+        lenis.on('scroll', (e) => {
+            const scrolled = (e.animatedScroll / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            scrollProgress.style.width = scrolled + '%';
+        });
+
+        // Navbar Interaction - Triggered by Hero Section visibility
+        ScrollTrigger.create({
+            trigger: "#home",
+            start: "bottom 10%",
+            onEnter: () => navbar.classList.add('bg-slate-950/80', 'backdrop-blur-xl', 'py-4'),
+            onLeaveBack: () => navbar.classList.remove('bg-slate-950/80', 'backdrop-blur-xl', 'py-4'),
+        });
+
+        // Mobile Menu
+        const mobileTrigger = document.getElementById('mobileTrigger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        let isMenuOpen = false;
+
+        mobileTrigger.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            mobileMenu.style.transform = isMenuOpen ? 'translateX(0)' : 'translateX(100%)';
+            const spans = mobileTrigger.querySelectorAll('span');
+            if (isMenuOpen) {
+                spans[0].style.transform = 'rotate(45deg) translate(6px, 6px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(5px, -6px)';
+            } else {
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            }
+        });
+
+        // Closer on link click
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                isMenuOpen = false;
+                mobileMenu.style.transform = 'translateX(100%)';
+                const spans = mobileTrigger.querySelectorAll('span');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            });
+        });
+
+        // Primary Animation Engine
+        const animate = () => {
+            // Hero Entrance
+            gsap.to('[data-animate="hero"]', {
+                opacity: 1,
+                y: 0,
+                duration: 1.2,
+                stagger: 0.2,
+                ease: "power4.out",
+                delay: 0.5
+            });
+
+            // Scroll Triggers
+            const scrollElements = document.querySelectorAll('[data-animate="scroll"]');
+            scrollElements.forEach((el) => {
+                gsap.to(el, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: el,
+                        start: "top 85%",
+                        toggleActions: "play none none none"
+                    }
+                });
+            });
+
+            // Parallax
+            gsap.to('.parallax-bg', {
+                yPercent: 15,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: '#home',
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+
+            // Counters
+            document.querySelectorAll('.counter').forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                gsap.to(counter, {
+                    innerText: target,
+                    duration: 2,
+                    snap: { innerText: 1 },
+                    scrollTrigger: {
+                        trigger: counter,
+                        start: "top 90%"
+                    }
+                });
+            });
+        };
+
+        // Initialize when ready
+        window.addEventListener('load', animate);
+
+        // Form Submission Simulation
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = "TRANSMITTING...";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.style.background = "#22c55e";
+                btn.innerText = "SUCCESSFULLY SENT";
+                setTimeout(() => {
+                    btn.style.background = "";
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    e.target.reset();
+                }, 3000);
+            }, 1500);
+        });
+    </script>
+</body>
+
+</html>
